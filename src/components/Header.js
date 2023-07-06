@@ -1,5 +1,4 @@
-// Header.js
-import React from 'react';
+import React, { useState } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -9,6 +8,7 @@ import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { Button } from '@mui/material';
+import axios from 'axios';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -49,7 +49,30 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const Header = ({ searchQuery, onSearchInputChange }) => {
+const apiKey = '538d6a3bc31761cd9909b01b8d035f21';
+
+const Header = ({setSearchResults}) => {
+
+    const [searchQuery, setSearchQuery] = useState()
+    // const [searchResults, setSearchResults] = useState([]);
+
+
+    const handleSearch = async () => {
+        try {
+          const response = await fetch(
+            `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchQuery}`
+          );
+          if (response.ok) {
+            const data = await response.json();
+            setSearchResults(data.results);
+          } else {
+            console.log('Error:', response.status);
+          }
+        } catch (error) {
+          console.log('Error:', error.message);
+        }
+      };
+      
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ bgcolor: '#1f1f1f' }}>
@@ -58,12 +81,12 @@ const Header = ({ searchQuery, onSearchInputChange }) => {
             <Typography
               variant="h6"
               component="div"
-             sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+              sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}
             >
               <FavoriteIcon sx={{ fontSize: 30 }} />
               <span>Favorites</span>
             </Typography>
-          </Box>  
+          </Box>
 
           <Search>
             <SearchIconWrapper>
@@ -72,10 +95,13 @@ const Header = ({ searchQuery, onSearchInputChange }) => {
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
-              value={searchQuery}
-              onChange={onSearchInputChange}
+              onChange={(e)=> {setSearchQuery(e.target.value)}}
+
+              
             />
-            <Button>Search</Button>
+            <Button sx={{ color: 'black', backgroundColor:'white', borderRadius:'20px', fontSize:'small' }} onClick={handleSearch}>
+              Search
+            </Button>
           </Search>
         </Toolbar>
       </AppBar>
