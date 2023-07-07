@@ -34,6 +34,7 @@ const ModalContent = styled(Box)(({ theme }) => ({
 
 const MovieDetailsModal = ({ selectedMovie, onClose, onAddToFavorites }) => {
   const isMobile = useMediaQuery('(max-width:600px)');
+  const isTablet = useMediaQuery('(max-width:960px)');
   const dispatch = useDispatch();
   const favorites = useSelector((state) => state.favorites.movies);
 
@@ -49,17 +50,21 @@ const MovieDetailsModal = ({ selectedMovie, onClose, onAddToFavorites }) => {
 
   return (
     <StyledModal open={selectedMovie !== null} onClose={onClose}>
-      <ModalContent>
+      <ModalContent sx={{ maxWidth: isMobile ? '100%' : isTablet ? 600 : 800 }}>
         <Grid container spacing={isMobile ? 2 : 4}>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} sm={6} md={4}>
             <CardMedia
               component="img"
               alt={selectedMovie?.title}
               image={`https://image.tmdb.org/t/p/w500${selectedMovie?.poster_path}`}
-              sx={{ height: '100%' }}
+              sx={{
+                height: isMobile ? 300 : isTablet ? 400 : '100%',
+                borderTopLeftRadius: isMobile || isTablet ? 8 : 0,
+                borderBottomLeftRadius: isMobile || isTablet ? 8 : 0,
+              }}
             />
           </Grid>
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} sm={6} md={8}>
             <Typography variant="h5" gutterBottom>
               {selectedMovie?.title}
             </Typography>

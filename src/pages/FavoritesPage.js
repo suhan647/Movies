@@ -44,7 +44,7 @@ const FavoritesPage = () => {
   return (
     <Container maxWidth="xl">
       <Typography variant="h4" align="center" gutterBottom>
-        Favorites Page
+        <strong>Your Favorite Movies</strong>
       </Typography>
       {favorites.length > 0 ? (
         <Grid container spacing={4} sx={{ m: '10px' }}>
@@ -58,19 +58,24 @@ const FavoritesPage = () => {
                   onClick={() => handleMovieClick(movie)}
                 />
                 <CardContent>
-                  <Typography variant="h6" component="div">
+                  <Typography variant="h6" component="div" gutterBottom>
                     {movie.title}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Release Date: {movie.release_date}
+                  <Typography variant="body2" color="text.secondary" gutterBottom>
+                    <strong>Release Date:</strong> {movie.release_date}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    Popularity: {movie.popularity}
+                    <strong>Popularity:</strong> {movie.popularity}
                   </Typography>
                 </CardContent>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 16px 16px' }}>
-                  <Button sx={{ color: 'red' }} onClick={() => handleRemoveFromFavorites(movie.id)}>
-                    <small>Remove from Favorites</small>
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '0 16px 16px' }}>
+                  <Button
+                    onClick={() => handleRemoveFromFavorites(movie.id)}
+                    variant="outlined"
+                    color="error"
+                    size="small"
+                  >
+                    Remove from Favorites
                   </Button>
                 </Box>
               </Card>
@@ -78,8 +83,8 @@ const FavoritesPage = () => {
           ))}
         </Grid>
       ) : (
-        <Typography variant="subtitle1" align="center">
-          You have no favorite movies.
+        <Typography variant="subtitle1" align="center" mt={4}>
+          You haven't added any favorite movies yet.
         </Typography>
       )}
 
