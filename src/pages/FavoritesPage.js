@@ -14,7 +14,14 @@ import {
 import { removeFromFavorites } from '../redux/favoritesSlice';
 import MovieDetailsModal from './MovieDetailsModal';
 import { clearSelectedMovie } from '../redux/moviesSlice';
+import styled from '@emotion/styled';
 
+const CardWrapper = styled(Card)`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+`;
 
 const FavoritesPage = () => {
   const favorites = useSelector((state) => state.favorites.movies);
@@ -43,7 +50,7 @@ const FavoritesPage = () => {
         <Grid container spacing={4} sx={{ m: '10px' }}>
           {favorites.map((movie) => (
             <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={movie.id}>
-              <Card>
+              <CardWrapper>
                 <CardMedia
                   component="img"
                   alt={movie.title}
@@ -71,7 +78,7 @@ const FavoritesPage = () => {
                     Remove from Favorites
                   </Button>
                 </Box>
-              </Card>
+              </CardWrapper>
             </Grid>
           ))}
         </Grid>

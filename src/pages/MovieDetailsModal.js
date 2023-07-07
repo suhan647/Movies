@@ -45,9 +45,7 @@ const MovieDetailsModal = ({ selectedMovie, onClose, onAddToFavorites }) => {
       dispatch(addToFavorites(selectedMovie));
     }
   };
-
   const isFavorite = favorites.some((movie) => movie.id === selectedMovie?.id);
-
   return (
     <StyledModal open={selectedMovie !== null} onClose={onClose}>
       <ModalContent sx={{ maxWidth: isMobile ? '100%' : isTablet ? 600 : 800 }}>

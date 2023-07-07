@@ -31,6 +31,15 @@ const PageTitle = styled(Typography)`
   font-weight: bold;
 `;
 
+const CardWrapper = styled(Card)`
+  height: 100%;
+  transition: transform 0.3s;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+`;
+
 const MoviesPage = ({ searchResults }) => {
   const [moviesData, setMoviesData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -92,12 +101,12 @@ const MoviesPage = ({ searchResults }) => {
   return (
     <Container maxWidth="xl" style={{ padding: '2rem' }}>
       <PageTitle variant="h4" align="center" gutterBottom>
-        <strong> Movies</strong>
+        <strong>Movies</strong>
       </PageTitle>
       <Grid container spacing={4}>
         {currentMovies.map((movie) => (
           <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={movie.id}>
-            <Card style={{ height: '100%' }} onClick={() => handleMovieClick(movie)}>
+            <CardWrapper onClick={() => handleMovieClick(movie)}>
               <CardMedia
                 component="img"
                 alt={movie.title}
@@ -115,7 +124,7 @@ const MoviesPage = ({ searchResults }) => {
                   Popularity: {movie.popularity}
                 </Typography>
               </CardContent>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 16px 16px' }}>
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '0 16px 16px' }}>
                 {favorites.find((favMovie) => favMovie.id === movie.id) ? (
                   <Button
                     variant="contained"
@@ -136,7 +145,7 @@ const MoviesPage = ({ searchResults }) => {
                   </Button>
                 )}
               </Box>
-            </Card>
+            </CardWrapper>
           </Grid>
         ))}
       </Grid>
@@ -160,11 +169,7 @@ const MoviesPage = ({ searchResults }) => {
         message="Added to Favorites"
       />
 
-      <Modal
-        open={selectedMovie !== null}
-        onClose={handleCloseModal}
-        disableScrollLock
-      >
+      <Modal open={selectedMovie !== null} onClose={handleCloseModal} disableScrollLock>
         <MovieDetailsModal
           selectedMovie={selectedMovie}
           onClose={handleCloseModal}
