@@ -7,21 +7,14 @@ import {
   Card,
   CardMedia,
   CardContent,
-  IconButton,
-  Snackbar,
   Modal,
   Box,
   Button,
 } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { Favorite as FavoriteIcon } from '@mui/icons-material';
 import { removeFromFavorites } from '../redux/favoritesSlice';
 import MovieDetailsModal from './MovieDetailsModal';
 import { clearSelectedMovie } from '../redux/moviesSlice';
 
-const RemoveButton = styled(IconButton)(({ theme }) => ({
-  color: theme.palette.error.main,
-}));
 
 const FavoritesPage = () => {
   const favorites = useSelector((state) => state.favorites.movies);

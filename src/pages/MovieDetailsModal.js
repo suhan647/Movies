@@ -14,7 +14,7 @@ import {
 import { styled } from '@mui/material/styles';
 import { Favorite as FavoriteIcon } from '@mui/icons-material';
 import { addToFavorites, removeFromFavorites } from '../redux/favoritesSlice';
-import { clearSelectedMovie } from '../redux/moviesSlice';
+
 
 const StyledModal = styled(Modal)(({ theme }) => ({
   display: 'flex',
