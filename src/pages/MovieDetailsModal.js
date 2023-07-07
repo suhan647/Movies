@@ -10,7 +10,7 @@ import {
   Button,
   useMediaQuery,
 } from '@mui/material';
-import { Favorite as FavoriteIcon, Close as CloseIcon } from '@mui/icons-material';
+import { Favorite as FavoriteIcon } from '@mui/icons-material';
 
 const StyledModal = styled(Modal)(({ theme }) => ({
   display: 'flex',
