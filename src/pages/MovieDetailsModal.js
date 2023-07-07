@@ -1,4 +1,5 @@
-import { styled } from '@mui/material/styles';
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   Modal,
   Box,
@@ -10,7 +11,10 @@ import {
   Button,
   useMediaQuery,
 } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { Favorite as FavoriteIcon } from '@mui/icons-material';
+import { addToFavorites, removeFromFavorites } from '../redux/favoritesSlice';
+import { clearSelectedMovie } from '../redux/moviesSlice';
 
 const StyledModal = styled(Modal)(({ theme }) => ({
   display: 'flex',
@@ -30,6 +34,18 @@ const ModalContent = styled(Box)(({ theme }) => ({
 
 const MovieDetailsModal = ({ selectedMovie, onClose, onAddToFavorites }) => {
   const isMobile = useMediaQuery('(max-width:600px)');
+  const dispatch = useDispatch();
+  const favorites = useSelector((state) => state.favorites.movies);
+
+  const handleFavoriteButtonClick = () => {
+    if (isFavorite) {
+      dispatch(removeFromFavorites(selectedMovie.id));
+    } else {
+      dispatch(addToFavorites(selectedMovie));
+    }
+  };
+
+  const isFavorite = favorites.some((movie) => movie.id === selectedMovie?.id);
 
   return (
     <StyledModal open={selectedMovie !== null} onClose={onClose}>
@@ -63,8 +79,8 @@ const MovieDetailsModal = ({ selectedMovie, onClose, onAddToFavorites }) => {
               {selectedMovie?.overview}
             </Typography>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <IconButton color="primary" aria-label="Add to Favorites" onClick={() => onAddToFavorites(selectedMovie)}>
-                <FavoriteIcon />
+              <IconButton color="primary" aria-label="Add to Favorites" onClick={handleFavoriteButtonClick}>
+                <FavoriteIcon color={isFavorite ? 'error' : 'inherit'} />
               </IconButton>
               <Button variant="outlined" onClick={onClose}>
                 Close

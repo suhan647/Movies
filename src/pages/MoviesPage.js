@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { addToFavorites } from '../redux/favoritesSlice';
-import { removeFromFavorites } from '../redux/favoritesSlice';
+import { addToFavorites, removeFromFavorites } from '../redux/favoritesSlice';
 import MovieDetailsModal from './MovieDetailsModal';
 import {
     Container,
@@ -11,14 +10,14 @@ import {
     Card,
     CardMedia,
     CardContent,
-    IconButton,
+    Button,
     Snackbar,
     Modal,
     Box,
 } from '@mui/material';
 import {
     Favorite as FavoriteIcon,
-    AddCircleOutline as AddCircleOutlineIcon,
+    RemoveCircleOutline as RemoveCircleOutlineIcon,
 } from '@mui/icons-material';
 import axios from 'axios';
 import { selectMovie, clearSelectedMovie } from '../redux/moviesSlice';
@@ -61,6 +60,9 @@ const MoviesPage = ({ searchResults }) => {
         setSnackbarOpen(true);
     };
 
+    const handleRemoveFromFavorites = (movieId) => {
+        dispatch(removeFromFavorites(movieId));
+    };
 
     const handleMovieClick = (movie) => {
         dispatch(selectMovie(movie));
@@ -72,9 +74,12 @@ const MoviesPage = ({ searchResults }) => {
 
     const handleFavoriteButtonClick = (event, movie) => {
         event.stopPropagation();
-        handleAddToFavorites(movie);
+        if (favorites.find((favMovie) => favMovie.id === movie.id)) {
+            handleRemoveFromFavorites(movie.id);
+        } else {
+            handleAddToFavorites(movie);
+        }
     };
-
 
     const indexOfLastMovie = currentPage * moviesPerPage;
     const indexOfFirstMovie = indexOfLastMovie - moviesPerPage;
@@ -107,16 +112,25 @@ const MoviesPage = ({ searchResults }) => {
                                 </Typography>
                             </CardContent>
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 16px 16px' }}>
-                                <IconButton
-                                    color="success"
-                                    aria-label="Add to Favorites"
-                                    onClick={(event) => handleFavoriteButtonClick(event, movie)}
-                                >
-                                    <FavoriteIcon />
-                                    <Typography variant="body2" color="text.secondary">
-                                        {favorites.find((favMovie) => favMovie.id === movie.id) ? 'Added To Favorites' : 'Add To Favorites'}
-                                    </Typography>
-                                </IconButton>
+                                {favorites.find((favMovie) => favMovie.id === movie.id) ? (
+                                    <Button
+                                        variant="contained"
+                                        color="error"
+                                        startIcon={<RemoveCircleOutlineIcon />}
+                                        onClick={(event) => handleFavoriteButtonClick(event, movie)}
+                                    >
+                                        Remove from Favorites
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        startIcon={<FavoriteIcon />}
+                                        onClick={(event) => handleFavoriteButtonClick(event, movie)}
+                                    >
+                                        Add to Favorites
+                                    </Button>
+                                )}
                             </Box>
                         </Card>
                     </Grid>
@@ -151,6 +165,8 @@ const MoviesPage = ({ searchResults }) => {
                     selectedMovie={selectedMovie}
                     onClose={handleCloseModal}
                     onAddToFavorites={handleAddToFavorites}
+                    onRemoveFromFavorites={handleRemoveFromFavorites}
+                    isFavorite={favorites.find((favMovie) => favMovie.id === selectedMovie?.id)}
                 />
             </Modal>
 

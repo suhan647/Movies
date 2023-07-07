@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   Container,
@@ -16,6 +16,8 @@ import {
 import { styled } from '@mui/material/styles';
 import { Favorite as FavoriteIcon } from '@mui/icons-material';
 import { removeFromFavorites } from '../redux/favoritesSlice';
+import MovieDetailsModal from './MovieDetailsModal';
+import { clearSelectedMovie } from '../redux/moviesSlice';
 
 const RemoveButton = styled(IconButton)(({ theme }) => ({
   color: theme.palette.error.main,
@@ -24,9 +26,19 @@ const RemoveButton = styled(IconButton)(({ theme }) => ({
 const FavoritesPage = () => {
   const favorites = useSelector((state) => state.favorites.movies);
   const dispatch = useDispatch();
+  const [selectedMovie, setSelectedMovie] = useState(null);
 
   const handleRemoveFromFavorites = (movieId) => {
     dispatch(removeFromFavorites(movieId));
+  };
+
+  const handleMovieClick = (movie) => {
+    setSelectedMovie(movie);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedMovie(null);
+    dispatch(clearSelectedMovie());
   };
 
   return (
@@ -35,7 +47,7 @@ const FavoritesPage = () => {
         Favorites Page
       </Typography>
       {favorites.length > 0 ? (
-        <Grid container spacing={4} sx={{m:'10px'}}>
+        <Grid container spacing={4} sx={{ m: '10px' }}>
           {favorites.map((movie) => (
             <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={movie.id}>
               <Card>
@@ -43,6 +55,7 @@ const FavoritesPage = () => {
                   component="img"
                   alt={movie.title}
                   image={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                  onClick={() => handleMovieClick(movie)}
                 />
                 <CardContent>
                   <Typography variant="h6" component="div">
@@ -56,7 +69,7 @@ const FavoritesPage = () => {
                   </Typography>
                 </CardContent>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 16px 16px' }}>
-                  <Button sx={{color:"red"}} onClick={() => handleRemoveFromFavorites(movie.id)}>
+                  <Button sx={{ color: 'red' }} onClick={() => handleRemoveFromFavorites(movie.id)}>
                     <small>Remove from Favorites</small>
                   </Button>
                 </Box>
@@ -69,9 +82,12 @@ const FavoritesPage = () => {
           You have no favorite movies.
         </Typography>
       )}
+
+      <Modal open={selectedMovie !== null} onClose={handleCloseModal} disableScrollLock>
+        <MovieDetailsModal selectedMovie={selectedMovie} onClose={handleCloseModal} />
+      </Modal>
     </Container>
   );
 };
-
 
 export default FavoritesPage;
